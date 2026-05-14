@@ -11,8 +11,7 @@ export function Navbar() {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navLinks = [
-    { label: 'Marketplace', href: '/marketplace' },
-    { label: 'Browse', href: '/marketplace' },
+    { label: 'Browse Market', href: '/marketplace' },
     { label: 'Post Service', href: '/create-listing' },
   ];
 
@@ -31,7 +30,7 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href}>
+              <Link key={link.label} href={link.href}>
                 <Button variant="ghost" className="text-foreground hover:text-primary">
                   {link.label}
                 </Button>
@@ -73,7 +72,7 @@ export function Navbar() {
         {isOpen && (
           <div className="md:hidden border-t border-border py-4 space-y-2">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)}>
+              <Link key={link.label} href={link.href} onClick={() => setIsOpen(false)}>
                 <Button
                   variant="ghost"
                   className="w-full justify-start text-foreground hover:text-primary"

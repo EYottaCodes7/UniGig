@@ -7,7 +7,7 @@ import { ProfileCard } from '@/components/profile-card';
 import { ListingCard } from '@/components/listing-card';
 import { Star, MessageSquare, ArrowLeft, Heart, Share2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, use } from 'react';
 
 // Mock listing data
 const LISTING_DATA: Record<string, any> = {
@@ -80,8 +80,9 @@ const RELATED_LISTINGS = [
   },
 ];
 
-export default function ListingDetailPage({ params }: { params: { id: string } }) {
-  const listing = LISTING_DATA[params.id];
+export default function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const unwrappedParams = use(params);
+  const listing = LISTING_DATA[unwrappedParams.id];
   const [isFavorited, setIsFavorited] = useState(false);
 
   if (!listing) {
@@ -222,11 +223,18 @@ export default function ListingDetailPage({ params }: { params: { id: string } }
 
             {/* CTA */}
             <div className="space-y-3">
-              <Button className="w-full h-12 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold">
+              <Button 
+                className="w-full h-12 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold"
+                onClick={() => alert("Request Service feature coming soon!")}
+              >
                 <MessageSquare className="h-5 w-5" />
                 Request Service
               </Button>
-              <Button variant="outline" className="w-full h-12 border-border">
+              <Button 
+                variant="outline" 
+                className="w-full h-12 border-border"
+                onClick={() => alert("Contact Seller feature coming soon!")}
+              >
                 Contact Seller
               </Button>
             </div>
