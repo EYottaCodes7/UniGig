@@ -3,6 +3,7 @@
 import { Navbar } from '@/components/navbar';
 import { AuthForm } from '@/components/auth-form';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 export default function LoginPage() {
@@ -19,13 +20,18 @@ export default function LoginPage() {
 
       <div className="grid min-h-[calc(100vh-64px)] grid-cols-1 lg:grid-cols-2">
         {/* Left Side - Branding */}
-        <div className="hidden lg:flex flex-col justify-center items-start gap-8 px-12 bg-gradient-to-br from-primary/20 to-secondary/20">
+        <div className="hidden lg:flex flex-col justify-center items-start gap-8 px-12 bg-linear-to-br from-primary/20 to-secondary/20">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-2xl">
-                U
+              <div className="relative h-16 w-16 overflow-visible">
+                <Image 
+                  src="/logo.png" 
+                  alt="Unbroke Logo" 
+                  fill 
+                  className="object-contain mix-blend-multiply dark:mix-blend-screen scale-[1.7] origin-left brightness-[1.3] contrast-[1.3]" 
+                />
               </div>
-              <h2 className="text-3xl font-bold text-foreground">UniGig</h2>
+              <h2 className="text-3xl font-bold text-foreground">Unbroke</h2>
             </div>
             <p className="text-xl text-foreground font-semibold">
               Turn Your Skills Into Income
@@ -69,7 +75,7 @@ export default function LoginPage() {
                   </ul>
                 </div>
                 <Link href="/marketplace">
-                  <button className="w-full h-12 bg-primary hover:bg-secondary text-primary-foreground font-semibold rounded-lg transition-colors">
+                  <button className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-colors">
                     Go to Marketplace
                   </button>
                 </Link>
@@ -79,7 +85,7 @@ export default function LoginPage() {
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold text-foreground">Welcome Back</h1>
                   <p className="text-muted-foreground">
-                    Sign in to your UniGig account to continue
+                    Sign in to your Unbroke account to continue
                   </p>
                 </div>
 

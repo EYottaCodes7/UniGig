@@ -10,7 +10,7 @@ export function LandingStats() {
             Trusted by Campus Students
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            See why thousands choose UniGig for their skill exchange needs.
+            See why thousands choose Unbroke for their skill exchange needs.
           </p>
         </div>
 

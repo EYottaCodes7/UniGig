@@ -4,260 +4,288 @@ import { Navbar } from '@/components/navbar';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProfileCard } from '@/components/profile-card';
-import { ListingCard } from '@/components/listing-card';
-import { Star, MessageSquare, ArrowLeft, Heart, Share2, CheckCircle } from 'lucide-react';
+import { GigCard } from '@/components/GigCard';
+import { Star, ArrowLeft, Heart, Share2, CheckCircle2, MapPin, Clock, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import Image from 'next/image';
+import { useState, use } from 'react';
+import { motion, useScroll, useSpring } from 'framer-motion';
 
-// Mock listing data
+// Updated Mock listing data with images
 const LISTING_DATA: Record<string, any> = {
   '1': {
     id: '1',
-    title: 'Advanced Calculus Tutoring - Exam Prep & Homework Help',
-    category: 'Tutoring',
-    price: 25,
-    description: 'Expert calculus tutor with 5 years of experience helping students ace their exams! I specialize in limits, derivatives, integrals, and multivariable calculus. Whether you need last-minute exam prep or ongoing homework help, I\'m here to break down complex concepts into simple, understandable terms.',
-    fullDescription: 'I have been tutoring calculus for over 5 years and have helped hundreds of students improve their grades. My approach is personalized to your learning style and focuses on understanding concepts rather than just memorizing formulas.\n\nWhat I offer:\n• One-on-one tutoring sessions\n• Homework help and problem solving\n• Exam prep and practice tests\n• Concept explanation and clarification\n• Available on flexible schedule\n\nI respond quickly and am available for sessions multiple times per week. Most students see improvement within 2-3 sessions.',
-    userAvatar: 'JD',
-    userName: 'John Davis',
+    title: 'MacBook Pro Screen & Battery Replacement',
+    category: 'Tech Repairs',
+    price: 85,
+    description: 'Expert repairs for all MacBook models. Quality parts used with 30-day warranty.',
+    fullDescription: 'Is your MacBook running slow or has a cracked screen? I can help! I have over 3 years of experience in computer repair and specialize in Apple hardware.\n\nServices offered:\n• Screen replacement for MacBook Pro/Air\n• Battery replacement\n• Keyboard repair and cleaning\n• SSD upgrades and data recovery\n• OS reinstall and optimization\n\nI use high-quality replacement parts and provide a 30-day warranty on all my work. Most repairs are completed within 24-48 hours depending on part availability.',
+    userAvatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=100',
+    userName: 'Alex Rivera',
     userRating: 4.9,
-    userBio: 'Math enthusiast with a passion for teaching. PhD candidate in Mathematics.',
     responseTime: '1-2 hours',
     reviews: 47,
     isOnline: true,
-    tags: ['Calculus', 'Tutoring', 'Exam Prep', 'Homework'],
-    tags2: ['Mathematics', 'College Level', 'Fast Response'],
+    image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&q=80&w=800',
+    location: 'Campus West',
   },
-  '2': {
-    id: '2',
-    title: 'Web Development Projects - React, Node.js, Full Stack',
-    category: 'Tech',
-    price: 50,
-    description: 'Build your portfolio with real projects. React, Node.js expertise.',
-    fullDescription: 'Experienced full-stack developer helping students build impressive portfolio projects.',
-    userAvatar: 'SA',
-    userName: 'Sarah Ahmed',
+  '3': {
+    id: '3',
+    title: 'Calculus III & Physics II Peer Tutoring',
+    category: 'Academic',
+    price: 25,
+    description: 'Master complex concepts with personalized peer tutoring. Specializing in STEM.',
+    fullDescription: 'Struggling with triple integrals or Maxwell\'s equations? I\'m here to help! As an Engineering major, I\'ve aced these courses and know exactly where students usually get stuck.\n\nWhat I provide:\n• Step-by-step problem solving\n• Conceptual explanations (no just memorizing)\n• Exam prep strategy sessions\n• Digital notes from our sessions\n\nI offer both in-person (Library) and online sessions via Zoom. Group rates available if you bring a friend!',
+    userAvatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
+    userName: 'Elena Vance',
     userRating: 5.0,
-    userBio: 'Senior developer at startup. CS degree from prestigious university.',
-    responseTime: '30 minutes',
-    reviews: 62,
+    responseTime: '30 mins',
+    reviews: 32,
     isOnline: true,
-    tags: ['React', 'Node.js', 'JavaScript', 'Web Dev'],
-    tags2: ['Full Stack', 'Portfolio', 'Mentoring'],
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80&w=800',
+    location: 'Main Library',
   },
 };
 
-const RELATED_LISTINGS = [
-  {
-    id: '11',
-    title: 'Statistics Homework Help',
-    category: 'Tutoring',
-    price: 28,
-    description: 'SPSS, R, Python for stats. Exam prep and project help.',
-    userAvatar: 'MM',
-    userName: 'Marcus Miller',
-    userRating: 4.7,
-  },
+const RELATED_GIGS = [
   {
     id: '5',
-    title: 'Physics Problem Solving',
-    category: 'Tutoring',
-    price: 30,
-    description: 'Struggling with physics? I help break down complex concepts clearly.',
-    userAvatar: 'LK',
-    userName: 'Lisa Kim',
-    userRating: 4.9,
+    title: 'iPhone Screen Repair - All Models',
+    category: 'Tech Repairs',
+    price: 45,
+    seller: {
+      name: 'David Wilson',
+      avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=100',
+      rating: 4.9,
+    },
+    image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbab?auto=format&fit=crop&q=80&w=800',
+    location: 'Tech Hub',
   },
   {
-    id: '7',
-    title: 'Database & SQL Mentoring',
-    category: 'Tech',
-    price: 35,
-    description: 'Learn SQL and database design from an experienced developer.',
-    userAvatar: 'NP',
-    userName: 'Natalie Patel',
-    userRating: 4.95,
+    id: '2',
+    title: 'Quick Food & Grocery Delivery',
+    category: 'Delivery',
+    price: 5,
+    seller: {
+      name: 'Jordan Smith',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100',
+      rating: 4.8,
+    },
+    image: 'https://images.unsplash.com/photo-1526367790999-0150786486a9?auto=format&fit=crop&q=80&w=800',
+    location: 'Main Gate',
   },
 ];
 
-export default function ListingDetailPage({ params }: { params: { id: string } }) {
-  const listing = LISTING_DATA[params.id];
+export default function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const unwrappedParams = use(params);
+  const listing = LISTING_DATA[unwrappedParams.id] || LISTING_DATA['1']; // Fallback for demo
   const [isFavorited, setIsFavorited] = useState(false);
 
-  if (!listing) {
-    return (
-      <main className="min-h-screen bg-background">
-        <Navbar />
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-foreground mb-4">Listing not found</h1>
-            <Link href="/marketplace">
-              <Button className="bg-primary hover:bg-secondary">
-                Back to Marketplace
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   return (
-    <main className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-10">
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1.5 bg-primary z-50 origin-left"
+        style={{ scaleX }}
+      />
       <Navbar />
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        {/* Back Button */}
-        <Link href="/marketplace">
-          <Button variant="ghost" className="mb-6 gap-2 text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Marketplace
+      <main className="mx-auto max-w-7xl px-4 py-6 md:py-10 sm:px-6 lg:px-8">
+        {/* Breadcrumbs / Back */}
+        <div className="flex items-center justify-between mb-6">
+          <Button asChild variant="ghost" size="sm" className="gap-2 -ml-2 text-muted-foreground hover:text-foreground">
+            <Link href="/marketplace">
+              <ArrowLeft className="h-4 w-4" />
+              Back to search
+            </Link>
           </Button>
-        </Link>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" className="rounded-full h-10 w-10" onClick={() => setIsFavorited(!isFavorited)}>
+              <Heart className={`h-5 w-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} />
+            </Button>
+            <Button variant="outline" size="icon" className="rounded-full h-10 w-10">
+              <Share2 className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
 
-        <div className="grid gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Image */}
-            <div className="h-96 w-full rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-primary/30 font-semibold text-4xl">
-              {listing.category.charAt(0)}
-            </div>
+          <div className="lg:col-span-8 space-y-8">
+            {/* Main Image */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-3xl bg-muted shadow-sm"
+            >
+              <Image 
+                src={listing.image} 
+                alt={listing.title} 
+                fill 
+                className="object-cover"
+                priority
+              />
+              <div className="absolute top-4 left-4">
+                 <Badge className="bg-background/90 backdrop-blur-md text-foreground border-0 font-bold px-3 py-1">
+                   {listing.category}
+                 </Badge>
+              </div>
+            </motion.div>
 
-            {/* Title & Category */}
+            {/* Header Info */}
             <div className="space-y-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="space-y-3 flex-1">
-                  <Badge variant="secondary" className="bg-accent/20 text-accent border-0">
-                    {listing.category}
-                  </Badge>
-                  <h1 className="text-4xl font-bold text-foreground leading-tight">
-                    {listing.title}
-                  </h1>
-                  <div className="flex items-center gap-4 text-sm">
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-medium text-foreground">{listing.userRating}</span>
-                      <span className="text-muted-foreground">({listing.reviews} reviews)</span>
-                    </div>
-                  </div>
+              <h1 className="text-3xl md:text-5xl font-black font-heading tracking-tight leading-[1.1]">
+                {listing.title}
+              </h1>
+              
+              <div className="flex flex-wrap items-center gap-6 text-sm font-medium text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  <span className="text-foreground">{listing.userRating}</span>
+                  <span>({listing.reviews} reviews)</span>
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => setIsFavorited(!isFavorited)}
-                  >
-                    <Heart
-                      className={`h-5 w-5 ${
-                        isFavorited ? 'fill-accent text-accent' : 'text-muted-foreground'
-                      }`}
-                    />
-                  </Button>
-                  <Button size="icon" variant="outline">
-                    <Share2 className="h-5 w-5" />
-                  </Button>
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="h-4 w-4" />
+                  <span>{listing.location}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Shield className="h-4 w-4 text-primary" />
+                  <span>Verified Student</span>
                 </div>
               </div>
             </div>
 
-            {/* Price */}
-            <div className="rounded-2xl border border-border bg-card p-6">
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-primary">${listing.price}</span>
-                <span className="text-muted-foreground">per session</span>
-              </div>
+            <hr className="border-border/60" />
+
+            {/* Price Box Mobile Only */}
+            <div className="lg:hidden p-6 rounded-2xl bg-muted/30 border">
+               <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Pricing</p>
+                    <p className="text-3xl font-black text-foreground">${listing.price} <span className="text-sm font-normal text-muted-foreground">per gig</span></p>
+                  </div>
+                  <Button size="lg" className="rounded-full px-8 font-bold">Book Now</Button>
+               </div>
             </div>
 
             {/* Description */}
             <div className="space-y-4">
-              <h2 className="text-2xl font-bold text-foreground">About this service</h2>
-              <p className="whitespace-pre-line text-lg text-muted-foreground leading-relaxed">
+              <h2 className="text-2xl font-bold font-heading">Service Description</h2>
+              <div className="text-lg text-muted-foreground leading-relaxed whitespace-pre-line">
                 {listing.fullDescription}
-              </p>
-            </div>
-
-            {/* Tags */}
-            <div className="space-y-4">
-              <h3 className="font-bold text-foreground">Skills & Topics</h3>
-              <div className="flex flex-wrap gap-2">
-                {[...listing.tags, ...listing.tags2].map((tag) => (
-                  <Badge key={tag} variant="outline" className="border-primary/30">
-                    {tag}
-                  </Badge>
-                ))}
               </div>
             </div>
 
-            {/* About Service */}
-            <div className="rounded-2xl border border-border bg-card p-6 space-y-4">
-              <h3 className="font-bold text-foreground">What&apos;s included</h3>
-              <ul className="space-y-3">
-                {[
-                  'Personalized tutoring sessions tailored to your needs',
-                  'Detailed explanation of difficult concepts',
-                  'Practice problems and exam preparation',
-                  'Quick response time (usually within 1-2 hours)',
-                  'Flexible scheduling to fit your calendar',
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-muted-foreground">
-                    <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* Features List */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               {[
+                 'Guaranteed satisfaction',
+                 'Fast campus delivery',
+                 'Student-friendly pricing',
+                 'Safe & secure meeting'
+               ].map((text, i) => (
+                 <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-muted/20 border border-transparent hover:border-primary/20 transition-colors">
+                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                      <CheckCircle2 size={20} />
+                    </div>
+                    <span className="font-semibold">{text}</span>
+                 </div>
+               ))}
+            </div>
+
+            {/* Reviews Summary Placeholder */}
+            <div className="pt-8 border-t">
+               <h2 className="text-2xl font-bold font-heading mb-6">Student Reviews</h2>
+               <div className="space-y-6">
+                  {[1, 2].map((i) => (
+                    <div key={i} className="space-y-2">
+                       <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-muted overflow-hidden relative">
+                             <Image src={`https://i.pravatar.cc/100?u=${i}`} alt="user" fill />
+                          </div>
+                          <div>
+                             <p className="font-bold">Student {i}</p>
+                             <div className="flex items-center gap-1">
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                                <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                             </div>
+                          </div>
+                       </div>
+                       <p className="text-muted-foreground leading-relaxed">
+                         Great service! Alex was super helpful and fixed my screen in no time. Definitely recommend to everyone on campus.
+                       </p>
+                    </div>
+                  ))}
+               </div>
             </div>
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Seller Card */}
-            <ProfileCard
-              avatar={listing.userAvatar}
-              name={listing.userName}
-              rating={listing.userRating}
-              reviewCount={listing.reviews}
-              responseTime={listing.responseTime}
-              isOnline={listing.isOnline}
-            />
+          <div className="lg:col-span-4 space-y-6">
+            <div className="sticky top-24 space-y-6">
+              {/* Desktop Price & Action */}
+              <div className="hidden lg:block p-8 rounded-[2rem] bg-background border shadow-xl shadow-primary/5 space-y-6">
+                 <div className="flex items-baseline justify-between">
+                    <p className="text-4xl font-black text-foreground">${listing.price}</p>
+                    <Badge variant="outline" className="text-xs uppercase font-bold tracking-widest text-muted-foreground">Standard Gig</Badge>
+                 </div>
+                 
+                 <div className="space-y-4 pt-4">
+                    <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
+                       <Clock size={16} className="text-primary" />
+                       Typically 24h delivery
+                    </div>
+                    <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
+                       <Shield size={16} className="text-primary" />
+                       30-day warranty
+                    </div>
+                 </div>
 
-            {/* CTA */}
-            <div className="space-y-3">
-              <Button className="w-full h-12 gap-2 bg-accent hover:bg-accent/90 text-accent-foreground text-base font-semibold">
-                <MessageSquare className="h-5 w-5" />
-                Request Service
-              </Button>
-              <Button variant="outline" className="w-full h-12 border-border">
-                Contact Seller
-              </Button>
-            </div>
+                 <Button size="lg" className="w-full h-14 rounded-full font-bold text-lg shadow-lg shadow-primary/20 mt-6">
+                    Book Service
+                 </Button>
+                 <p className="text-center text-xs text-muted-foreground pt-4">You won&apos;t be charged yet</p>
+              </div>
 
-            {/* Info Box */}
-            <div className="rounded-2xl border border-border bg-card/50 p-4 space-y-2 text-sm">
-              <h4 className="font-bold text-foreground">Things to know</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>• Response time: {listing.responseTime}</li>
-                <li>• Completed: {listing.reviews * 50}+ projects</li>
-                <li>• Member since 2021</li>
-                <li>• Average rating: {listing.userRating}/5.0</li>
-              </ul>
+              {/* Seller Profile */}
+              <ProfileCard 
+                name={listing.userName}
+                avatar={listing.userAvatar}
+                rating={listing.userRating}
+                reviewCount={listing.reviews}
+                responseTime={listing.responseTime}
+                isOnline={listing.isOnline}
+              />
             </div>
           </div>
         </div>
 
-        {/* Related Listings */}
-        <section className="mt-16 space-y-8 border-t border-border pt-16">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-bold text-foreground">Similar services</h2>
-            <p className="text-muted-foreground">Other {listing.category.toLowerCase()} services you might like</p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {RELATED_LISTINGS.map((listing) => (
-              <ListingCard key={listing.id} {...listing} />
-            ))}
-          </div>
+        {/* Similar Listings */}
+        <section className="mt-20 pt-20 border-t">
+           <div className="flex items-end justify-between mb-10">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-black font-heading tracking-tight">Similar to this</h2>
+                <p className="text-muted-foreground">Other services you might be interested in.</p>
+              </div>
+           </div>
+           
+           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {RELATED_GIGS.map((gig) => (
+                <GigCard key={gig.id} {...gig} />
+              ))}
+           </div>
         </section>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

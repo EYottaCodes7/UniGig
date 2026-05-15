@@ -30,7 +30,7 @@ export default function CreateListingPage() {
             <div className="space-y-2">
               <h1 className="text-3xl font-bold text-foreground">Service Published!</h1>
               <p className="text-lg text-muted-foreground">
-                Your service is now live and visible to all students on UniGig.
+                Your service is now live and visible to all students on Unbroke.
               </p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-6 space-y-4 text-left">
@@ -51,16 +51,16 @@ export default function CreateListingPage() {
               </ul>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
-              <Link href="/marketplace" className="flex-1">
-                <Button className="w-full h-12 bg-primary hover:bg-secondary">
+              <Button asChild className="w-full h-12 bg-primary hover:bg-secondary">
+                <Link href="/marketplace">
                   Browse Marketplace
-                </Button>
-              </Link>
-              <Link href="/profile/1" className="flex-1">
-                <Button variant="outline" className="w-full h-12 border-border">
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full h-12 border-border">
+                <Link href="/profile/1">
                   View My Profile
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -74,12 +74,12 @@ export default function CreateListingPage() {
 
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Back Button */}
-        <Link href="/marketplace">
-          <Button variant="ghost" className="mb-8 gap-2 text-muted-foreground hover:text-foreground">
+        <Button asChild variant="ghost" className="mb-8 gap-2 text-muted-foreground hover:text-foreground">
+          <Link href="/marketplace">
             <ArrowLeft className="h-4 w-4" />
             Back to Marketplace
-          </Button>
-        </Link>
+          </Link>
+        </Button>
 
         {/* Header */}
         <div className="mb-12 space-y-2">

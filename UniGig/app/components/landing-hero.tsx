@@ -4,10 +4,10 @@ import { ArrowRight } from 'lucide-react';
 
 export function LandingHero() {
   return (
-    <div className="relative min-h-[600px] flex items-center justify-center overflow-hidden pt-20 pb-10">
+    <div className="relative min-h-150 flex items-center justify-center overflow-hidden pt-20 pb-10">
       {/* Background Gradient */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-background to-accent/10" />
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-accent/5 blur-3xl" />
       </div>
@@ -25,7 +25,7 @@ export function LandingHero() {
         <div className="space-y-4">
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground leading-tight">
             Turn Your Skills Into
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
               {' '}Income
             </span>
           </h1>
