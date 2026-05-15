@@ -16,12 +16,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Upload, X } from 'lucide-react';
 
 const CATEGORIES = [
-  'Tutoring',
-  'Tech',
-  'Design',
+  'Tech Repairs',
+  'Academic',
   'Delivery',
-  'Second-Hand',
-  'Academic Help',
+  'Second-hand',
+  'Design',
+  'Events',
+  'Other',
 ];
 
 interface ListingFormProps {

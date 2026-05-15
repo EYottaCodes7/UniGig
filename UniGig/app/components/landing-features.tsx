@@ -24,7 +24,7 @@ export function LandingFeatures() {
       <div className="space-y-12">
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-4xl font-bold text-foreground">
-            Why Choose UniGig?
+            Why Choose Unbroke?
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             Built by students, for students. Simple, safe, and smart.

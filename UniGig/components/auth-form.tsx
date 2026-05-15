@@ -177,7 +177,7 @@ export function AuthForm({ type, onSubmit }: AuthFormProps) {
       <Button
         type="submit"
         disabled={isLoading || (type === 'signup' && !formData.agreeToTerms)}
-        className="w-full h-12 bg-primary hover:bg-secondary text-base font-semibold gap-2"
+        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground text-base font-semibold gap-2"
       >
         {isLoading ? (
           <>

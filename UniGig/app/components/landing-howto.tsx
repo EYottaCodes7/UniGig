@@ -2,7 +2,7 @@ const steps = [
   {
     number: '1',
     title: 'Sign Up',
-    description: 'Create your UniGig account and set up your profile with your skills and interests.',
+    description: 'Create your Unbroke account and set up your profile with your skills and interests.',
   },
   {
     number: '2',
