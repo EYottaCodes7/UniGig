@@ -1,0 +1,401 @@
+
+<h2 class="sr-only">SkillBridge — Interactive MVP Demo for a student skill and service exchange platform</h2>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+  .sb-root { min-height: 600px; background: var(--color-background-tertiary); }
+
+  .sb-nav {
+    background: var(--color-background-primary);
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 0 1.5rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .sb-logo { font-size: 17px; font-weight: 500; color: var(--color-text-primary); display: flex; align-items: center; gap: 8px; }
+  .sb-logo-dot { width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; }
+  .sb-nav-links { display: flex; align-items: center; gap: 6px; }
+  .sb-nav-btn { font-size: 13px; padding: 5px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-primary); cursor: pointer; }
+  .sb-nav-btn:hover { background: var(--color-background-secondary); }
+  .sb-nav-btn.primary { background: #1D9E75; color: #fff; border-color: #1D9E75; }
+  .sb-nav-btn.primary:hover { background: #0F6E56; }
+
+  .sb-page { display: none; }
+  .sb-page.active { display: block; }
+
+  .sb-hero {
+    background: var(--color-background-primary);
+    padding: 3rem 1.5rem 2.5rem;
+    text-align: center;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+  .sb-badge { display: inline-block; background: #E1F5EE; color: #0F6E56; font-size: 12px; padding: 4px 12px; border-radius: 20px; margin-bottom: 1rem; }
+  .sb-hero h1 { font-size: 28px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; margin-bottom: 0.75rem; }
+  .sb-hero p { font-size: 15px; color: var(--color-text-secondary); margin-bottom: 1.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+  .sb-hero-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .sb-btn-lg { padding: 10px 22px; border-radius: var(--border-radius-md); font-size: 14px; cursor: pointer; border: 0.5px solid transparent; }
+  .sb-btn-green { background: #1D9E75; color: #fff; }
+  .sb-btn-green:hover { background: #0F6E56; }
+  .sb-btn-outline { background: transparent; border-color: var(--color-border-secondary); color: var(--color-text-primary); }
+  .sb-btn-outline:hover { background: var(--color-background-secondary); }
+
+  .sb-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; padding: 1.5rem; }
+  .sb-feat-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+  .sb-feat-icon { font-size: 20px; color: #1D9E75; margin-bottom: 8px; }
+  .sb-feat-card h3 { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+  .sb-feat-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+
+  .sb-market-header { padding: 1.25rem 1.5rem 0.75rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .sb-market-header h2 { font-size: 16px; font-weight: 500; }
+  .sb-search-wrap { display: flex; gap: 8px; align-items: center; flex: 1; max-width: 320px; }
+  .sb-search-wrap input { flex: 1; font-size: 13px; padding: 6px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); }
+  .sb-cats { display: flex; gap: 6px; padding: 0 1.5rem 0.75rem; flex-wrap: wrap; }
+  .sb-cat-pill { font-size: 12px; padding: 4px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-secondary); cursor: pointer; }
+  .sb-cat-pill.active { background: #1D9E75; color: #fff; border-color: #1D9E75; }
+  .sb-cat-pill:hover:not(.active) { background: var(--color-background-secondary); }
+  .sb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding: 0 1.5rem 1.5rem; }
+  .sb-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+  .sb-card:hover { border-color: var(--color-border-primary); }
+  .sb-card-cat { font-size: 11px; color: #0F6E56; background: #E1F5EE; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-bottom: 8px; }
+  .sb-card h3 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--color-text-primary); }
+  .sb-card p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 10px; }
+  .sb-card-footer { display: flex; align-items: center; justify-content: space-between; }
+  .sb-price { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .sb-user { font-size: 11px; color: var(--color-text-tertiary); }
+
+  .sb-detail { padding: 1.5rem; max-width: 600px; }
+  .sb-detail-back { font-size: 13px; color: var(--color-text-secondary); cursor: pointer; display: flex; align-items: center; gap: 6px; margin-bottom: 1.25rem; background: none; border: none; }
+  .sb-detail-back:hover { color: var(--color-text-primary); }
+  .sb-detail-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; }
+  .sb-detail-card h2 { font-size: 20px; font-weight: 500; margin-bottom: 0.5rem; }
+  .sb-detail-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .sb-detail-price { font-size: 18px; font-weight: 500; color: #1D9E75; }
+  .sb-detail-desc { font-size: 14px; color: var(--color-text-secondary); line-height: 1.7; margin-bottom: 1.25rem; }
+  .sb-detail-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 6px; }
+  .sb-request-btn { width: 100%; margin-top: 1.25rem; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: var(--border-radius-md); font-size: 14px; cursor: pointer; }
+  .sb-request-btn:hover { background: #0F6E56; }
+  .sb-success-msg { background: #E1F5EE; color: #0F6E56; border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 13px; margin-top: 10px; display: none; }
+
+  .sb-create-wrap { padding: 1.5rem; max-width: 540px; }
+  .sb-create-wrap h2 { font-size: 18px; font-weight: 500; margin-bottom: 1.25rem; }
+  .sb-field { margin-bottom: 1rem; }
+  .sb-field label { font-size: 13px; color: var(--color-text-secondary); display: block; margin-bottom: 5px; }
+  .sb-field input, .sb-field textarea, .sb-field select { width: 100%; font-size: 13px; padding: 8px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); }
+  .sb-field textarea { min-height: 90px; resize: vertical; }
+  .sb-ai-row { display: flex; gap: 8px; align-items: flex-end; }
+  .sb-ai-row .sb-field { flex: 1; margin-bottom: 0; }
+  .sb-ai-btn { padding: 8px 12px; font-size: 12px; border-radius: var(--border-radius-md); border: 0.5px solid #1D9E75; color: #1D9E75; background: transparent; cursor: pointer; white-space: nowrap; }
+  .sb-ai-btn:hover { background: #E1F5EE; }
+  .sb-submit-btn { width: 100%; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: var(--border-radius-md); font-size: 14px; cursor: pointer; margin-top: 0.5rem; }
+  .sb-submit-btn:hover { background: #0F6E56; }
+
+  .sb-profile-wrap { padding: 1.5rem; }
+  .sb-profile-header { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; display: flex; gap: 1rem; align-items: flex-start; }
+  .sb-avatar { width: 52px; height: 52px; border-radius: 50%; background: #E1F5EE; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 500; color: #0F6E56; flex-shrink: 0; }
+  .sb-profile-name { font-size: 17px; font-weight: 500; margin-bottom: 4px; }
+  .sb-profile-bio { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 10px; line-height: 1.5; }
+  .sb-skills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sb-skill-tag { font-size: 12px; padding: 3px 10px; border-radius: 20px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); }
+  .sb-section-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; color: var(--color-text-secondary); }
+
+  .sb-auth-wrap { padding: 2rem 1.5rem; max-width: 360px; margin: 0 auto; }
+  .sb-auth-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 2rem; }
+  .sb-auth-card h2 { font-size: 18px; font-weight: 500; margin-bottom: 0.25rem; }
+  .sb-auth-card p { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+  .sb-auth-toggle { font-size: 13px; color: var(--color-text-secondary); text-align: center; margin-top: 1rem; }
+  .sb-auth-toggle span { color: #1D9E75; cursor: pointer; }
+
+  .sb-toast { position: fixed; bottom: 20px; right: 20px; background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 16px; font-size: 13px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); display: none; z-index: 100; }
+</style>
+
+<div class="sb-root">
+
+  <nav class="sb-nav">
+    <div class="sb-logo">
+      <div class="sb-logo-dot"></div>
+      SkillBridge
+    </div>
+    <div class="sb-nav-links">
+      <button class="sb-nav-btn" onclick="showPage('market')">Browse</button>
+      <button class="sb-nav-btn" onclick="showPage('create')">Post a skill</button>
+      <button class="sb-nav-btn" onclick="showPage('profile')">Profile</button>
+      <button class="sb-nav-btn primary" onclick="showPage('auth')">Sign in</button>
+    </div>
+  </nav>
+
+  <!-- Landing -->
+  <div id="page-landing" class="sb-page active">
+    <div class="sb-hero">
+      <div class="sb-badge">Built for AAU students</div>
+      <h1>Turn your skills into<br>opportunities</h1>
+      <p>SkillBridge connects university students to offer services, find help, and collaborate — all within your campus community.</p>
+      <div class="sb-hero-btns">
+        <button class="sb-btn-lg sb-btn-green" onclick="showPage('market')">Explore marketplace</button>
+        <button class="sb-btn-lg sb-btn-outline" onclick="showPage('create')">Offer a skill</button>
+      </div>
+    </div>
+    <div class="sb-features">
+      <div class="sb-feat-card">
+        <div class="sb-feat-icon"><i class="ti ti-school" aria-hidden="true"></i></div>
+        <h3>Academic help</h3>
+        <p>Find tutors for calculus, programming, physics, and more from fellow students.</p>
+      </div>
+      <div class="sb-feat-card">
+        <div class="sb-feat-icon"><i class="ti ti-code" aria-hidden="true"></i></div>
+        <h3>Tech services</h3>
+        <p>Get websites built, apps designed, or code reviewed by skilled peers.</p>
+      </div>
+      <div class="sb-feat-card">
+        <div class="sb-feat-icon"><i class="ti ti-palette" aria-hidden="true"></i></div>
+        <h3>Creative skills</h3>
+        <p>Graphic design, video editing, CV creation — find talent on campus.</p>
+      </div>
+      <div class="sb-feat-card">
+        <div class="sb-feat-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
+        <h3>Collaboration</h3>
+        <p>Post project ideas and find teammates who complement your skills.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marketplace -->
+  <div id="page-market" class="sb-page">
+    <div class="sb-market-header">
+      <h2>Marketplace</h2>
+      <div class="sb-search-wrap">
+        <i class="ti ti-search" aria-hidden="true" style="color: var(--color-text-tertiary); font-size:16px;"></i>
+        <input id="search-input" type="text" placeholder="Search skills..." oninput="filterListings()" />
+      </div>
+    </div>
+    <div class="sb-cats" id="cat-pills"></div>
+    <div class="sb-grid" id="listings-grid"></div>
+  </div>
+
+  <!-- Detail -->
+  <div id="page-detail" class="sb-page">
+    <div class="sb-detail">
+      <button class="sb-detail-back" onclick="showPage('market')">
+        <i class="ti ti-arrow-left" aria-hidden="true"></i> Back to marketplace
+      </button>
+      <div class="sb-detail-card" id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- Create Listing -->
+  <div id="page-create" class="sb-page">
+    <div class="sb-create-wrap">
+      <h2>Post a listing</h2>
+      <div class="sb-field">
+        <label>Title</label>
+        <input type="text" id="form-title" placeholder="e.g. Calculus tutoring for 1st years" />
+      </div>
+      <div class="sb-field">
+        <label>Category</label>
+        <select id="form-cat">
+          <option>Tutoring</option><option>Tech</option><option>Design</option>
+          <option>Delivery</option><option>Second-Hand</option><option>Academic Help</option><option>Other</option>
+        </select>
+      </div>
+      <div class="sb-ai-row">
+        <div class="sb-field">
+          <label>Description</label>
+          <textarea id="form-desc" placeholder="Describe what you're offering..."></textarea>
+        </div>
+        <button class="sb-ai-btn" onclick="aiEnhance()"><i class="ti ti-sparkles" aria-hidden="true"></i> AI polish</button>
+      </div>
+      <div class="sb-field" style="margin-top:10px;">
+        <label>Price (ETB)</label>
+        <input type="text" id="form-price" placeholder="e.g. 150" />
+      </div>
+      <div class="sb-field">
+        <label>Contact method</label>
+        <input type="text" id="form-contact" placeholder="Telegram @handle or phone" />
+      </div>
+      <button class="sb-submit-btn" onclick="submitListing()">Publish listing</button>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div id="page-profile" class="sb-page">
+    <div class="sb-profile-wrap">
+      <div class="sb-profile-header">
+        <div class="sb-avatar">YA</div>
+        <div>
+          <div class="sb-profile-name">Yonas Aklilu</div>
+          <div class="sb-profile-bio">Computer Science @ AAU · Passionate about teaching and building software. Available for tutoring and freelance dev work.</div>
+          <div class="sb-skills">
+            <span class="sb-skill-tag">Python</span>
+            <span class="sb-skill-tag">React</span>
+            <span class="sb-skill-tag">Calculus</span>
+            <span class="sb-skill-tag">Graphic Design</span>
+            <span class="sb-skill-tag">Data Structures</span>
+          </div>
+        </div>
+      </div>
+      <div class="sb-section-title">Your listings</div>
+      <div class="sb-grid" id="profile-listings"></div>
+    </div>
+  </div>
+
+  <!-- Auth -->
+  <div id="page-auth" class="sb-page">
+    <div class="sb-auth-wrap">
+      <div class="sb-auth-card">
+        <h2 id="auth-title">Welcome back</h2>
+        <p id="auth-sub">Sign in to your SkillBridge account</p>
+        <div class="sb-field" id="name-field" style="display:none;">
+          <label>Full name</label>
+          <input type="text" placeholder="Yonas Aklilu" />
+        </div>
+        <div class="sb-field">
+          <label>Email</label>
+          <input type="text" placeholder="you@aau.edu.et" />
+        </div>
+        <div class="sb-field">
+          <label>Password</label>
+          <input type="password" placeholder="••••••••" />
+        </div>
+        <button class="sb-submit-btn" onclick="fakeLogin()">Sign in</button>
+        <div class="sb-auth-toggle" id="auth-toggle">
+          Don't have an account? <span onclick="toggleAuth()">Sign up</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="sb-toast" id="toast"></div>
+
+<script>
+const CATS = ['All', 'Tutoring', 'Tech', 'Design', 'Delivery', 'Second-Hand', 'Academic Help', 'Other'];
+let activeCat = 'All';
+
+const LISTINGS = [
+  { id:1, title:'Calculus & Algebra Tutoring', cat:'Tutoring', desc:'I help 1st and 2nd year students understand calculus from scratch. Clear explanations, past exam practice.', price:'150 ETB/hr', user:'Yonas A.', contact:'@yonas_tg' },
+  { id:2, title:'Frontend Web Development', cat:'Tech', desc:'I build clean React websites and landing pages. Portfolio available. Delivery in 3–5 days depending on scope.', price:'From 500 ETB', user:'Biruk M.', contact:'@biruk_dev' },
+  { id:3, title:'Logo & Brand Design', cat:'Design', desc:'Professional logo design, social media kits, and flyers. 2 revisions included. Delivered in PNG + PDF.', price:'300 ETB', user:'Hiwot T.', contact:'0911-xxx-xxx' },
+  { id:4, title:'Assignment Editing & Proofreading', cat:'Academic Help', desc:'I proofread and improve your academic papers — grammar, structure, citations. Fast turnaround.', price:'100 ETB', user:'Selam K.', contact:'@selam_k' },
+  { id:5, title:'Campus Delivery Service', cat:'Delivery', desc:'I do document and parcel delivery across AAU campus. Same-day. Available Mon–Sat 8am–6pm.', price:'30–80 ETB', user:'Dawit B.', contact:'@dawit_go' },
+  { id:6, title:'CV & Cover Letter Writing', cat:'Academic Help', desc:'Professional CVs tailored for internship and job applications. ATS-friendly format. 24hr delivery.', price:'200 ETB', user:'Meron Z.', contact:'@meron_cv' },
+  { id:7, title:'Second-Hand Scientific Calculator', cat:'Second-Hand', desc:'Casio fx-991EX in great condition. Perfect for engineering and natural science students.', price:'450 ETB', user:'Abel F.', contact:'0922-xxx-xxx' },
+  { id:8, title:'Python & Data Science Tutoring', cat:'Tutoring', desc:'Learn Python from basics to pandas and matplotlib. Beginner friendly. Notes included.', price:'180 ETB/hr', user:'Tigist R.', contact:'@tigist_py' },
+];
+
+function showPage(name) {
+  document.querySelectorAll('.sb-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (name === 'market') renderListings();
+  if (name === 'profile') renderProfile();
+}
+
+function renderCats() {
+  const el = document.getElementById('cat-pills');
+  el.innerHTML = CATS.map(c =>
+    `<button class="sb-cat-pill ${c === activeCat ? 'active' : ''}" onclick="setCat('${c}')">${c}</button>`
+  ).join('');
+}
+
+function setCat(c) {
+  activeCat = c;
+  renderCats();
+  renderListings();
+}
+
+function filterListings() { renderListings(); }
+
+function renderListings() {
+  renderCats();
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+  let list = LISTINGS;
+  if (activeCat !== 'All') list = list.filter(l => l.cat === activeCat);
+  if (q) list = list.filter(l => l.title.toLowerCase().includes(q) || l.desc.toLowerCase().includes(q) || l.cat.toLowerCase().includes(q));
+  document.getElementById('listings-grid').innerHTML = list.length
+    ? list.map(cardHTML).join('')
+    : `<p style="color:var(--color-text-tertiary);font-size:14px;padding:1rem 0;">No listings found.</p>`;
+}
+
+function cardHTML(l) {
+  return `<div class="sb-card" onclick="showDetail(${l.id})">
+    <span class="sb-card-cat">${l.cat}</span>
+    <h3>${l.title}</h3>
+    <p>${l.desc.substring(0,80)}…</p>
+    <div class="sb-card-footer">
+      <span class="sb-price">${l.price}</span>
+      <span class="sb-user">${l.user}</span>
+    </div>
+  </div>`;
+}
+
+function showDetail(id) {
+  const l = LISTINGS.find(x => x.id === id);
+  if (!l) return;
+  document.getElementById('detail-content').innerHTML = `
+    <span class="sb-card-cat">${l.cat}</span>
+    <h2 style="margin-top:10px;">${l.title}</h2>
+    <div class="sb-detail-meta">
+      <span class="sb-detail-price">${l.price}</span>
+      <span style="font-size:12px;color:var(--color-text-tertiary);">by ${l.user}</span>
+    </div>
+    <div class="sb-detail-desc">${l.desc}</div>
+    <div class="sb-detail-row"><i class="ti ti-phone" aria-hidden="true"></i> <span id="contact-reveal" style="cursor:pointer;color:#1D9E75;" onclick="revealContact(this,'${l.contact}')">Tap to reveal contact</span></div>
+    <button class="sb-request-btn" onclick="sendRequest()">Request this service</button>
+    <div class="sb-success-msg" id="req-success">Your request was sent! The provider will contact you soon.</div>
+  `;
+  showPage('detail');
+}
+
+function revealContact(el, val) { el.textContent = val; el.style.cursor = 'default'; }
+
+function sendRequest() {
+  document.getElementById('req-success').style.display = 'block';
+  showToast('Request sent!');
+}
+
+function renderProfile() {
+  const mine = LISTINGS.filter(l => l.user === 'Yonas A.');
+  document.getElementById('profile-listings').innerHTML = mine.map(cardHTML).join('');
+}
+
+function submitListing() {
+  const t = document.getElementById('form-title').value.trim();
+  if (!t) { showToast('Please add a title'); return; }
+  showToast('Listing published!');
+  LISTINGS.unshift({ id: Date.now(), title: t, cat: document.getElementById('form-cat').value, desc: document.getElementById('form-desc').value || 'No description yet.', price: document.getElementById('form-price').value + ' ETB' || 'Negotiable', user: 'Yonas A.', contact: document.getElementById('form-contact').value });
+  showPage('market');
+}
+
+function aiEnhance() {
+  const desc = document.getElementById('form-desc');
+  const raw = desc.value.trim();
+  if (!raw) { desc.value = 'I offer professional calculus tutoring for 1st and 2nd year university students. Sessions are tailored to your current syllabus, with worked examples and past paper practice included. Flexible scheduling available.'; return; }
+  desc.value = raw.charAt(0).toUpperCase() + raw.slice(1).replace(/\.?\s*$/, '') + '. Contact me to book your first session — flexible scheduling available.';
+  showToast('AI polish applied ✓');
+}
+
+let isSignup = false;
+function toggleAuth() {
+  isSignup = !isSignup;
+  document.getElementById('auth-title').textContent = isSignup ? 'Create account' : 'Welcome back';
+  document.getElementById('auth-sub').textContent = isSignup ? 'Join SkillBridge as a student' : 'Sign in to your SkillBridge account';
+  document.getElementById('name-field').style.display = isSignup ? 'block' : 'none';
+  document.getElementById('auth-toggle').innerHTML = isSignup
+    ? `Already have an account? <span onclick="toggleAuth()">Sign in</span>`
+    : `Don't have an account? <span onclick="toggleAuth()">Sign up</span>`;
+}
+
+function fakeLogin() { showToast('Signed in!'); showPage('market'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+
+renderListings();
+</script>
